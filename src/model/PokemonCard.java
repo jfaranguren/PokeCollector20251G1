@@ -4,10 +4,10 @@ public class PokemonCard {
 
     private String name;
     private int healthPoints;
-    private String pokemonType;
+    private PokemonType pokemonType;
     private int attackPower;
 
-    public PokemonCard(String name, int healthPoints, String pokemonType, int attackPower){
+    public PokemonCard(String name, int healthPoints, PokemonType pokemonType, int attackPower){
         this.name=name;
         this.healthPoints=healthPoints;
         this.pokemonType=pokemonType;
@@ -30,11 +30,11 @@ public class PokemonCard {
         this.healthPoints=healthPoints;
     }
 
-    public String getPokemonType(){
+    public PokemonType getPokemonType(){
         return pokemonType;
     } 
 
-    public void setPokemonType(String pokemonType){
+    public void setPokemonType(PokemonType pokemonType){
         this.pokemonType = pokemonType;
     }
     
