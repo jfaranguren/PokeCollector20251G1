@@ -16,21 +16,10 @@ public class Controller {
 
     }
 
-    /**
-     * Descripcion: ...
-     * pre: El arreglo collection debe estar inicializado
-     * pos: PokemonCard queda añadido al arreglo collection
-     * @param name String El nombre de la carta a registrar 
-     * @param healthPoints int ...
-     * @param pokemonType int ...
-     * @param attackPower int ...
-     * @return boolean true si se añade, false si no
-     */
-    public boolean savePokemonCard(String name, int healthPoints, int pokemonType, int attackPower){
+    public PokemonType calculatePokemonType(int option){
 
         PokemonType temp = PokemonType.AGUA;
-
-        switch (pokemonType) {
+        switch (option) {
             case 1:
                 temp = PokemonType.AGUA;
                 break;
@@ -48,10 +37,25 @@ public class Controller {
             break;
         }
 
+        return temp;
+
+    }
+
+    /**
+     * Descripcion: ...
+     * pre: El arreglo collection debe estar inicializado
+     * pos: PokemonCard queda añadido al arreglo collection
+     * @param name String El nombre de la carta a registrar 
+     * @param healthPoints int ...
+     * @param pokemonType int ...
+     * @param attackPower int ...
+     * @return boolean true si se añade, false si no
+     */
+    public boolean savePokemonCard(String name, int healthPoints, int pokemonType, int attackPower){
+
+        PokemonType temp = calculatePokemonType(pokemonType);
         PokemonCard newCard = new PokemonCard(name, healthPoints, temp, attackPower);
-
         for (int i = 0; i < collection.length; i++) {
-
             if(collection[i]==null){
                 collection[i]=newCard;
                 return true;
@@ -99,26 +103,39 @@ public class Controller {
     }
 
     public void modifyCard(String name, int healthpoints, int pokemontype, int attackPower, int position){
-        PokemonType temp=PokemonType.AGUA;
-        switch (pokemontype) {
-            case 1:
-                temp=PokemonType.AGUA;
-                break;
-            case 2:
-                temp=PokemonType.FUEGO;
-                break;
-            case 3:
-                temp=PokemonType.PLANTA;
-                break;
-            case 4:
-                temp=PokemonType.ELECTRICO;
-                break;
-            default:
-            temp=PokemonType.AGUA;
-                break;
-        }
+        PokemonType temp=calculatePokemonType(pokemontype);
         PokemonCard newCard=new PokemonCard(name, healthpoints, temp, attackPower);
         collection[position-1]=newCard;
+    }
+
+    public boolean modifyFieldPokemonCard(int position, int option, String data) {
+        int dataInteger = 0;
+
+        if(option!=1){
+            dataInteger = Integer.parseInt(data);
+        }
+
+        switch (option) {
+            case 1:
+                collection[position-1].setName(data);
+                return true;
+                case 2:
+                collection[position-1].setPokemonType(calculatePokemonType(dataInteger));
+                return true;
+                case 3:
+                collection[position-1].setHealthPoints(dataInteger);
+                return true;
+                case 4:
+                collection[position-1].setAttackPower(dataInteger);
+                return true;
+            default:
+                break;
+        }
+
+
+
+        return false;
+
     }
 
 
