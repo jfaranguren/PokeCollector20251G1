@@ -1,18 +1,19 @@
 package model;
+import java.util.ArrayList; //Cambios
 
 public class Controller {
 
-    private PokemonCard[] collection;
+    private ArrayList<PokemonCard> collection; //Cambios
 
     public Controller(){
-       collection = new PokemonCard[200];
+       collection = new ArrayList<PokemonCard>(); //Cambios
        testData();
     }
 
     public void testData(){
 
-        savePokemonCard("Leafeon", 80, 3, 40);
-        savePokemonCard("Jolteon", 80, 4, 100);
+        savePokemonCard("Leafeon", 80, 3, "Hoja afilada",60,3);
+        savePokemonCard("Jolteon", 80, 4, "Attacktrueno",40,4);
 
     }
 
@@ -47,23 +48,17 @@ public class Controller {
      * pos: PokemonCard queda añadido al arreglo collection
      * @param name String El nombre de la carta a registrar 
      * @param healthPoints int ...
-     * @param pokemonType int ...
+     * @param pokemonTypeSelection int ...
      * @param attackPower int ...
      * @return boolean true si se añade, false si no
      */
-    public boolean savePokemonCard(String name, int healthPoints, int pokemonType, int attackPower){
+    public boolean savePokemonCard(String name, int healthPoints, int pokemonTypeSelection, String attackName, int attackPower, int attackType){
 
-        PokemonType temp = calculatePokemonType(pokemonType);
-        PokemonCard newCard = new PokemonCard(name, healthPoints, temp, attackPower);
-        for (int i = 0; i < collection.length; i++) {
-            if(collection[i]==null){
-                collection[i]=newCard;
-                return true;
-            }
-            
-        }        
+        PokemonType pokemonType = calculatePokemonType(pokemonTypeSelection);
+
+        PokemonCard newCard = new PokemonCard(name, healthPoints, pokemonType, new PokemonAttack(attackName, attackPower, calculatePokemonType(attackType)));    
         
-        return false;
+        return collection.add(newCard);
     }
 
     /**
@@ -74,17 +69,17 @@ public class Controller {
     public String getCollection(){
         String list="Las cartas registradas son:\n";
 
-        for (int i = 0; i < collection.length; i++) {
-            if(collection[i]!=null){
-                list+=(i+1)+"|"+collection[i].getName()+"\n"; //collection[i] es un objeto PokemonCard
-            }
+        for (int i = 0; i < collection.size(); i++) {
+
+                list+=(i+1)+"|"+collection.get(i).toString()+"\n"; //collection[i] es un objeto PokemonCard
+            
         }
         return list;
     }
 
     public String getPokemonTypeList(){
 
-        String msg = "Los tipos registrados son: ";
+        String msg = "Los tipos registrados son: \n";
         PokemonType[] types = PokemonType.values();
 
         for (int i = 0; i < types.length; i++) {
@@ -96,16 +91,26 @@ public class Controller {
     }
 
     public boolean verifyCard(int position){
-        if (collection[position]!=null){
+        if (collection.get(position)!=null){
             return true;
         }
         return false;
     }
 
-    public void modifyCard(String name, int healthpoints, int pokemontype, int attackPower, int position){
+    public String getPokemonCard(int position){
+
+        if(verifyCard(position-1)){
+            return collection.get(position-1).toString();
+        }
+
+        return null;
+
+    }
+
+    public void modifyCard(String name, int healthpoints, int pokemontype, String attackName, int attackPower, int attackType, int position){
         PokemonType temp=calculatePokemonType(pokemontype);
-        PokemonCard newCard=new PokemonCard(name, healthpoints, temp, attackPower);
-        collection[position-1]=newCard;
+        PokemonCard newCard=new PokemonCard(name, healthpoints, temp, new PokemonAttack(attackName, attackPower, calculatePokemonType(attackType)));
+        collection.set(position-1,newCard);
     }
 
     public boolean modifyFieldPokemonCard(int position, int option, String data) {
@@ -117,16 +122,16 @@ public class Controller {
 
         switch (option) {
             case 1:
-                collection[position-1].setName(data);
+                collection.get(position-1).setName(data);
                 return true;
                 case 2:
-                collection[position-1].setPokemonType(calculatePokemonType(dataInteger));
+                collection.get(position-1).setPokemonType(calculatePokemonType(dataInteger));
                 return true;
                 case 3:
-                collection[position-1].setHealthPoints(dataInteger);
+                collection.get(position-1).setHealthPoints(dataInteger);
                 return true;
                 case 4:
-                collection[position-1].setAttackPower(dataInteger);
+                //collection.get(position-1).setAttackPower(dataInteger);
                 return true;
             default:
                 break;

@@ -5,13 +5,31 @@ public class PokemonCard {
     private String name;
     private int healthPoints;
     private PokemonType pokemonType;
-    private int attackPower;
+    private PokemonAttack[] attacks;
 
-    public PokemonCard(String name, int healthPoints, PokemonType pokemonType, int attackPower){
+    public PokemonCard(String name, int healthPoints, PokemonType pokemonType, PokemonAttack attack){
         this.name=name;
         this.healthPoints=healthPoints;
         this.pokemonType=pokemonType;
-        this.attackPower=attackPower;
+        attacks = new PokemonAttack[2];
+        addAttack(attack);
+    }
+
+    public PokemonCard(String name, int healthPoints, PokemonType pokemonType, PokemonAttack[] attacks){
+        this.name=name;
+        this.healthPoints=healthPoints;
+        this.pokemonType=pokemonType;
+        this.attacks = attacks;
+    }
+
+    public void addAttack(PokemonAttack attack){
+        for (int i = 0; i < attacks.length; i++) {
+            if(attacks[i]==null){
+                attacks[i]=attack;
+                break;
+            }
+        }
+     
     }
 
     public String getName(){
@@ -38,13 +56,14 @@ public class PokemonCard {
         this.pokemonType = pokemonType;
     }
     
-    public int getAttackPower(){
-        return attackPower;
+    public PokemonAttack[] getAttacks() {
+        return attacks;
     }
 
-    public void setAttackPower(int attackPower){
-        this.attackPower=attackPower;
-    }
+      public String toString(){
+        return name+", "+healthPoints+", "+pokemonType;
+        //Añadir el toString del ataque
 
-    
+
+    }
 }

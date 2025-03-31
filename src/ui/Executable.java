@@ -25,6 +25,8 @@ public class Executable {
 
     public void registerPokemonCard() {
 
+        input.nextLine();
+
         System.out.println("Digite el nombre");
         String name = input.nextLine();
 
@@ -36,10 +38,20 @@ public class Executable {
         System.out.println("Digite el tipo del Pokemon");
         int type = input.nextInt();
 
-        System.out.println("Digite el poder de ataque");
-        int aP = input.nextInt();
+        input.nextLine();
 
-        if (controller.savePokemonCard(name, hp, type, aP)) {
+        System.out.println("Digite el nombre del ataque");
+        String attackName = input.nextLine();
+
+        System.out.println("Digite el poder de ataque");
+        int attackPower = input.nextInt();
+
+        System.out.println(controller.getPokemonTypeList());
+
+        System.out.println("Digite el tipo del ataque");
+        int attackType = input.nextInt();
+
+        if (controller.savePokemonCard(name, hp, type, attackName, attackPower, attackType)) {
             System.out.println("Carta registrada exitosamente");
         } else {
             System.out.println("Coleccion llena");
@@ -102,10 +114,20 @@ public class Executable {
             System.out.println("Digite el tipo de pokemon: ");
             int type= input.nextInt();
     
-            System.out.println("Digite el poder de ataque: ");
-            int aP =input.nextInt();
+            input.nextLine();
 
-            controller.modifyCard(name, hp, type, aP, cardmod);
+            System.out.println("Digite el nombre del ataque");
+            String attackName = input.nextLine();
+    
+            System.out.println("Digite el poder de ataque");
+            int attackPower = input.nextInt();
+
+            System.out.println(controller.getPokemonTypeList());
+    
+            System.out.println("Digite el tipo del ataque");
+            int attackType = input.nextInt();
+
+            controller.modifyCard(name, hp, type, attackName, attackPower, attackType, cardmod);
              
         }
 
