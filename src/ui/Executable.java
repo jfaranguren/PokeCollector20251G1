@@ -23,6 +23,65 @@ public class Executable {
 
     }
 
+    public void menu() {
+
+        int option = 0;
+        do {
+            System.out.println("\nBienvenido a PokeCollector");
+            System.out.println("Digite una opcion");
+            System.out.println("1) Registrar carta");
+            System.out.println("2) Consultar coleccion");
+            System.out.println("3) Modificar carta");
+            System.out.println("4) Borrar carta");
+            System.out.println("0) Salir");
+            option = input.nextInt();
+            switch (option) {
+                case 1:
+                    registerPokemonCard();
+                   
+                    break;
+                case 2:
+                    System.out.println(controller.getCollectionInfo());
+                  
+                    break;
+                case 3:
+                    System.out.println("Digite una opcion");    
+                    System.out.println("1) Para modificar TODOS los atributos de una carta ");
+                    System.out.println("2) Para modificar ALGUNO de los atributos de la carta");
+                    int modify = input.nextInt();
+                    if(modify==1){
+                        modifyPokemonCard();
+                    }else{
+                        modifyFieldPokemonCard();
+                    }
+                                
+                    break;
+                case 4:
+                    deletePokemonCard();
+                    break;
+
+                default:
+                    System.out.println("Opcion invalida");
+                    break;
+            }
+
+            backToMenu();
+
+        } while (option != 0);     
+
+    }
+
+    public void backToMenu(){
+
+        System.out.println("\nDigite 1 para volver al menu principal");
+        int menu = input.nextInt();
+
+        //Limpieza de pantalla
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+
+    }
+
     public void registerPokemonCard() {
 
         input.nextLine();
@@ -56,52 +115,19 @@ public class Executable {
         } else {
             System.out.println("Coleccion llena");
         }
-    }
-
-    public void menu() {
-
-        int option = 0;
-        do {
-            System.out.println("Bienvenido a PokeCollector");
-            System.out.println("Digite una opcion");
-            System.out.println("1) Registrar carta");
-            System.out.println("2) Consultar coleccion");
-            System.out.println("3) Modificar carta");
-            System.out.println("4) Borrar carta");
-            System.out.println("0) Salir");
-            option = input.nextInt();
-            switch (option) {
-                case 1:
-                    registerPokemonCard();
-                    break;
-                case 2:
-                    System.out.println(controller.getCollection());
-                    break;
-                case 3:
-                    modifyPokemonCard();
-                    break;
-                case 4:
-                    deletePokemonCard();
-                    break;
-
-                default:
-                    System.out.println("Opcion invalida");
-                    break;
-            }
-
-        } while (option != 0);     
 
     }
+
+   
 
     public void modifyPokemonCard(){
 
-        System.out.println(controller.getCollection());
-        System.out.println("");
+        System.out.println(controller.getCollectionInfo());
         System.out.println("Digite la posicion de la carta la cual quiere modificar");
-        int cardmod=input.nextInt();
-        if((cardmod>200)||(cardmod<0)){
+        int position=input.nextInt();
+        if((position>200)||(position<0)){
             System.out.println("Digite una posicion valida");
-        }else if(controller.verifyCard(cardmod-1)){
+        }else if(controller.verifyCard(position-1)){
             
             input.nextLine();
             System.out.println("Digite el nombre del pokemon: ");
@@ -127,7 +153,7 @@ public class Executable {
             System.out.println("Digite el tipo del ataque");
             int attackType = input.nextInt();
 
-            controller.modifyCard(name, hp, type, attackName, attackPower, attackType, cardmod);
+            controller.modifyCard(name, hp, type, attackName, attackPower, attackType, position);
              
         }
 
@@ -135,22 +161,21 @@ public class Executable {
 
     public void modifyFieldPokemonCard(){
 
-        System.out.println(controller.getCollection());
-        System.out.println("");
+        System.out.println(controller.getCollectionInfo());
         System.out.println("Digite la posicion de la carta la cual quiere modificar");
-        int cardmod=input.nextInt();
-        if((cardmod>200)||(cardmod<0)){
+        int position=input.nextInt();
+        if((position>controller.getCollectionSize())||(position<0)){
             System.out.println("Digite una posicion valida");
-        }else if(controller.verifyCard(cardmod-1)){
+        }else if(controller.verifyCard(position-1)){
 
-            System.out.println("Digite que quiere modificar \n1. Nombre\n2. Tipo\n3. Puntos de vida\4. Puntos de ataque");
+            System.out.println("Digite que quiere modificar \n1. Nombre\n2. Tipo\n3. Puntos de vida");
             int option = input.nextInt();
             String data = "";
-
             input.nextLine();
 
             switch(option){
                 case 1:
+                
                 System.out.println("Digite el nuevo nombre");
                 break;
                 case 2:
@@ -160,13 +185,10 @@ public class Executable {
                 case 3:
                 System.out.println("Digite los nuevos puntos de vida");
                 break;
-                case 4:
-                System.out.println("Digite los nuevos puntos de ataque");
-                break;
             }
             data = input.nextLine();
 
-            boolean result = controller.modifyFieldPokemonCard(cardmod,option,data);
+            boolean result = controller.modifyFieldPokemonCard(position-1,option,data);
 
             if(result){
                 System.out.println("Campo actualizado exitosamente");
@@ -175,9 +197,26 @@ public class Executable {
                 System.out.println("Error, no fue posible actualizar el campo");
             }
         }
+
     }
 
     public void deletePokemonCard(){
+
+        System.out.println(controller.getCollectionInfo());
+        System.out.println("Digite la posicion de la carta la cual quiere borrar");
+        int position=input.nextInt();
+        if((position>controller.getCollectionSize())||(position<0)){
+            System.out.println("Digite una posicion valida");
+        }else if(controller.verifyCard(position-1)){
+
+            if (controller.deletePokemonCard(position-1)!=null){
+                System.out.println("Carta borrada exitosamente");
+            }else{
+                System.out.println("La Carta no pudo ser borrada");
+            }
+
+        }
+
 
     }
 

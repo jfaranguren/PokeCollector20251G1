@@ -10,6 +10,11 @@ public class Controller {
        testData();
     }
 
+    public int getCollectionSize(){
+        return collection.size();
+    }
+
+
     public void testData(){
 
         savePokemonCard("Leafeon", 80, 3, "Hoja afilada",60,3);
@@ -66,7 +71,7 @@ public class Controller {
      * pre: El arreglo collection debe estar inicializado
      * @return String la lista de cartas registradas
      */
-    public String getCollection(){
+    public String getCollectionInfo(){
         String list="Las cartas registradas son:\n";
 
         for (int i = 0; i < collection.size(); i++) {
@@ -91,20 +96,11 @@ public class Controller {
     }
 
     public boolean verifyCard(int position){
-        if (collection.get(position)!=null){
+
+        if (position<=collection.size()&&collection.get(position)!=null){
             return true;
         }
         return false;
-    }
-
-    public String getPokemonCard(int position){
-
-        if(verifyCard(position-1)){
-            return collection.get(position-1).toString();
-        }
-
-        return null;
-
     }
 
     public void modifyCard(String name, int healthpoints, int pokemontype, String attackName, int attackPower, int attackType, int position){
@@ -122,16 +118,13 @@ public class Controller {
 
         switch (option) {
             case 1:
-                collection.get(position-1).setName(data);
+                collection.get(position).setName(data);
                 return true;
                 case 2:
-                collection.get(position-1).setPokemonType(calculatePokemonType(dataInteger));
+                collection.get(position).setPokemonType(calculatePokemonType(dataInteger));
                 return true;
                 case 3:
-                collection.get(position-1).setHealthPoints(dataInteger);
-                return true;
-                case 4:
-                //collection.get(position-1).setAttackPower(dataInteger);
+                collection.get(position).setHealthPoints(dataInteger);
                 return true;
             default:
                 break;
@@ -140,6 +133,13 @@ public class Controller {
 
 
         return false;
+
+    }
+
+    public PokemonCard deletePokemonCard(int position){
+
+        return collection.remove(position);
+
 
     }
 

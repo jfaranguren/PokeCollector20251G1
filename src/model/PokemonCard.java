@@ -61,8 +61,35 @@ public class PokemonCard {
     }
 
       public String toString(){
-        return name+", "+healthPoints+", "+pokemonType;
-        //Añadir el toString del ataque
+       
+        String msg = name+", "+healthPoints+", "+pokemonType;
+
+        String pkmAttacks = "";
+
+        for (int i = 0; i < attacks.length; i++) {
+
+            if(attacks[i]!=null){
+
+
+                pkmAttacks+="\n\t"+attacks[i].toString();
+
+            }
+            
+        }
+
+        if (pkmAttacks.equals("")) {
+
+            pkmAttacks = "\nNo tiene ataques registrados";
+            
+        }else{
+
+            pkmAttacks = "\n\tAtaques:"+pkmAttacks;
+
+        }
+       
+        return msg+pkmAttacks;
+
+    
 
 
     }
