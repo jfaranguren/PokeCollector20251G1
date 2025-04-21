@@ -1,14 +1,13 @@
 package model;
 
-public class PokemonCard {
+public class PokemonCard extends Card {
 
-    private String name;
     private int healthPoints;
     private PokemonType pokemonType;
     private PokemonAttack[] attacks;
 
     public PokemonCard(String name, int healthPoints, PokemonType pokemonType, PokemonAttack attack){
-        this.name=name;
+        super(name);
         this.healthPoints=healthPoints;
         this.pokemonType=pokemonType;
         attacks = new PokemonAttack[2];
@@ -16,7 +15,7 @@ public class PokemonCard {
     }
 
     public PokemonCard(String name, int healthPoints, PokemonType pokemonType, PokemonAttack[] attacks){
-        this.name=name;
+        super(name);
         this.healthPoints=healthPoints;
         this.pokemonType=pokemonType;
         this.attacks = attacks;
@@ -30,14 +29,6 @@ public class PokemonCard {
             }
         }
      
-    }
-
-    public String getName(){
-        return name;
-    }
-
-    public void setName(String name){
-        this.name=name;
     }
 
     public int getHealthPoints(){
@@ -60,37 +51,22 @@ public class PokemonCard {
         return attacks;
     }
 
+      @Override  
       public String toString(){
-       
-        String msg = name+", "+healthPoints+", "+pokemonType;
-
+        String msg = getName()+", "+healthPoints+", "+pokemonType;
         String pkmAttacks = "";
-
         for (int i = 0; i < attacks.length; i++) {
-
             if(attacks[i]!=null){
-
-
                 pkmAttacks+="\n\t"+attacks[i].toString();
-
             }
-            
         }
 
         if (pkmAttacks.equals("")) {
-
             pkmAttacks = "\nNo tiene ataques registrados";
-            
         }else{
-
             pkmAttacks = "\n\tAtaques:"+pkmAttacks;
-
         }
-       
+
         return msg+pkmAttacks;
-
-    
-
-
     }
 }
