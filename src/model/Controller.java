@@ -234,8 +234,18 @@ public class Controller {
         if(position>collection.size()||position<0){
             return "Error";
         }
-        
+
         return collection.get(position).toString();
+
+    }
+
+    public String getCardPrice(int position){
+
+        if(position>collection.size()||position<0){
+            return "Error";
+        }
+        
+        return "El precio es: "+collection.get(position).calculatePrice();
 
     }
 
