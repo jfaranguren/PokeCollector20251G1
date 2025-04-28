@@ -19,7 +19,7 @@ public class Controller {
 
         saveCard("Leafeon", 80, 3, "Hoja afilada", 60, 3);
         saveCard("Jolteon", 80, 4, "Attacktrueno", 40, 4);
-
+        saveCard("Energia Basica", 1);
     }
 
     public PokemonType calculatePokemonType(int option) {
@@ -69,7 +69,7 @@ public class Controller {
         return collection.add(newCard);
     }
 
-    public boolean saveCard(String name, int type){
+    public boolean saveCard(String name, int type) {
 
         PokemonType pokemonType = calculatePokemonType(type);
 
@@ -77,18 +77,15 @@ public class Controller {
 
         return collection.add(newCard);
 
-
     }
 
-    public boolean saveCard(String name, String type){
+    public boolean saveCard(String name, String type) {
 
         TrainerCard newCard = new TrainerCard(name, type);
 
         return collection.add(newCard);
 
-
     }
-
 
     /**
      * Descripcion:
@@ -172,6 +169,73 @@ public class Controller {
     public Card deleteCard(int position) {
 
         return collection.remove(position);
+
+    }
+
+    public String getCardInformationByType() {
+
+        String msg = "La coleccion de cartas tiene la siguiente composicion\n";
+        int pokemonCount = 0, trainerCount = 0, energyCount = 0;
+
+        for (Card card : collection) {
+            if (card instanceof PokemonCard) {
+                pokemonCount++;
+            }
+            if (card instanceof TrainerCard) {
+                trainerCount++;
+            }
+            if (card instanceof EnergyCard) {
+                energyCount++;
+            }
+        }
+        msg += "La cantidad de cartas tipo Pokemon es: " + pokemonCount + "\n";
+        msg += "La cantidad de cartas tipo Trainer es: " + trainerCount + "\n";
+        msg += "La cantidad de cartas tipo Energy es: " + energyCount + "\n";
+
+        return msg;
+
+    }
+
+    public String getCardInfomationByPokemonType(int typeSelected) {
+
+        int pokemonCount = 0, energyCount = 0;
+        PokemonType type = calculatePokemonType(typeSelected);
+
+        String msg = "La coleccion de cartas tiene la siguiente composicion por tipo "+type+"\n";
+
+        for (Card card : collection) {
+
+            // Validacion energia
+            if (card instanceof EnergyCard) {
+                if (((EnergyCard) card).getType() == type) {
+                    energyCount++;
+                }
+            }
+
+            // Validacion pokemon
+            if (card instanceof PokemonCard) {
+
+                if (((PokemonCard) card).hasPokemonAttackType(type)) {
+
+                    pokemonCount++;
+                }
+            }
+        }
+
+        msg += "La cantidad de cartas Pokemon es: " + pokemonCount + "\n";
+        msg += "La cantidad de cartas Energy es: " + energyCount + "\n";
+
+        return msg;
+
+    }
+
+    public String getCardInfo(int position){
+
+        if(position>collection.size()||position<0){
+            return "Error";
+        }
+        
+        return collection.get(position).toString();
 
     }
 

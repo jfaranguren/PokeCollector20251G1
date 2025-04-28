@@ -33,6 +33,9 @@ public class Executable {
             System.out.println("2) Consultar coleccion");
             System.out.println("3) Modificar Pokemon");
             System.out.println("4) Borrar carta");
+            System.out.println("5) Consultar estadisticas de la coleccion");
+            System.out.println("6) Cartas por tipo de Pokemon");
+            System.out.println("7) Consultar Info Carta");
             System.out.println("0) Salir");
             option = input.nextInt();
             switch (option) {
@@ -74,8 +77,18 @@ public class Executable {
 
                     break;
                 case 4:
-                    deletePokemonCard();
+                    deleteCard();
                     break;
+                case 5:
+                    System.out.println(controller.getCardInformationByType());
+                    break;
+                case 6:
+                    showCollectionByPokemonType();
+                    break;
+                    case 7:
+                    showCardInfo();
+                    break;
+
                 case 0:
                     System.out.println("Adios");
                     break;
@@ -104,7 +117,29 @@ public class Executable {
 
     }
 
-    public void registerTrainerCard(){
+    public void showCardInfo(){
+
+        System.out.println("Digite la posicion de la carta en la coleccion");
+        int pos = input.nextInt()-1;
+
+        System.out.println(controller.getCardInfo(pos));
+
+    }
+
+    public void showCollectionByPokemonType(){
+
+        System.out.println(controller.getPokemonTypeList());
+
+        System.out.println("Digite el tipo");
+        int type = input.nextInt();
+
+        System.out.println(controller.getCardInfomationByPokemonType(type));
+
+
+    }
+
+    
+    public void registerTrainerCard() {
 
         input.nextLine();
 
@@ -119,10 +154,10 @@ public class Executable {
         } else {
             System.out.println("Coleccion llena");
         }
-        
+
     }
 
-    public void registerEnergyCard(){
+    public void registerEnergyCard() {
 
         input.nextLine();
 
@@ -139,7 +174,7 @@ public class Executable {
         } else {
             System.out.println("Coleccion llena");
         }
-        
+
     }
 
     public void registerPokemonCard() {
@@ -258,7 +293,7 @@ public class Executable {
 
     }
 
-    public void deletePokemonCard() {
+    public void deleteCard() {
 
         System.out.println(controller.getCollectionInfo());
         System.out.println("Digite la posicion de la carta la cual quiere borrar");

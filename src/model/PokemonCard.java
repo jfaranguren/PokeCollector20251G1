@@ -69,4 +69,14 @@ public class PokemonCard extends Card {
 
         return msg+pkmAttacks;
     }
+
+    public boolean hasPokemonAttackType(PokemonType type){
+
+        for (PokemonAttack pokemonAttack : attacks) {
+            if(pokemonAttack!=null&&pokemonAttack.getType()==type){
+                return true; 
+            }
+        }
+        return false;
+    }
 }
