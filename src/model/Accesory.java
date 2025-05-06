@@ -1,6 +1,8 @@
 package model;
 
-public class Accesory implements Priceable{
+import java.io.Serializable;
+
+public abstract class Accesory implements Collectable, Serializable{
 
     private String name;
 
@@ -9,11 +11,15 @@ public class Accesory implements Priceable{
     }
 
     @Override
-    public double calculatePrice() {
-       
-        return 0.0;
+    public String getName() {
+        return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    
     
     
     

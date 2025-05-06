@@ -2,7 +2,7 @@ package model;
 
 import java.io.Serializable;
 
-public abstract class Card implements Priceable, Serializable{
+public abstract class Card implements Collectable, Serializable{
     
     private String name;
 
@@ -10,6 +10,7 @@ public abstract class Card implements Priceable, Serializable{
         this.name = name;
     }
 
+    @Override
     public String getName() {
         return name;
     }

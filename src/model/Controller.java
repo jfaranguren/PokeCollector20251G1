@@ -1,59 +1,96 @@
 package model;
 
+import java.io.EOFException;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList; //Cambios
+import java.util.ArrayList;
 
 public class Controller {
 
-    private ArrayList<Card> collection; // Cambios
-    private ArrayList<Accesory> accesoryCollection;
-    private ArrayList<Priceable> bigCollection;
-
+    private ArrayList<Collectable> bigCollection;
 
     public Controller() {
-        collection = new ArrayList<Card>(); // Cambios
-        accesoryCollection = new ArrayList<Accesory>();
-        bigCollection = new ArrayList<Priceable>();
-        testData();
-        System.out.println(writeFile());
+        bigCollection = new ArrayList<Collectable>(); // Cambios
+
+        if (!loadCollectionFromFile().equals("Carga exitosa")) {
+            testData();
+        }
+
     }
 
-    public String writeFile(){
+    public String saveCollectionToFile() {
 
-        File dataBase = new File("src\\model\\JuanCarlosPKMN.txt");
+        File dataBase = new File("src\\data\\MyCollection.txt");
 
-        try{
-        dataBase.createNewFile();
-        ObjectOutputStream writer = new ObjectOutputStream(new FileOutputStream(dataBase));
+        try {
+            dataBase.createNewFile();
+            ObjectOutputStream writer = new ObjectOutputStream(new FileOutputStream(dataBase));
 
-        for (Card c: collection) {
-            writer.writeObject(c);
+            for (Collectable p : bigCollection) {
+                writer.writeObject(p);
+            }
+            writer.flush();
+            writer.close();
+
+        } catch (FileNotFoundException e) {
+            return "Archivo no encontrado";
+
+        } catch (IOException e) {
+            return "Error, la ruta del archivo no es valida";
+
         }
-        writer.flush();
-        writer.close();
-
-        }catch(FileNotFoundException e1){
-            //return "Archivo no encontrado";
-            e1.printStackTrace();
-        } catch(IOException e){
-            //return "Error, la ruta del archivo no es valida";
-            e.printStackTrace();
-        }
-
 
         return null;
 
+    }
+
+    public String loadCollectionFromFile() {
+
+        File dataBase = new File("src\\data\\MyCollection.txt");
+
+        try {
+
+            ObjectInputStream reader = new ObjectInputStream(new FileInputStream(dataBase));
+
+            Collectable temp = null;
+
+            boolean flag = false;
+
+            while (!flag) {
+
+                temp = (Collectable) reader.readObject();
+
+                if (temp != null) {
+                    bigCollection.add(temp);
+                } else {
+                    flag = true;
+                }
+
+            }
+
+            reader.close();
+
+        } catch (ClassNotFoundException e) {
+            return "Error de clase";
+        } catch (EOFException e) {
+            return "Carga exitosa";
+        } catch (FileNotFoundException e) {
+            return "Archivo no encontrado";
+        } catch (IOException e) {
+            return "Error, la ruta del archivo no es valida";
+        }
+
+        return null;
 
     }
 
-
-
     public int getCollectionSize() {
-        return collection.size();
+        return bigCollection.size();
     }
 
     public void testData() {
@@ -61,31 +98,7 @@ public class Controller {
         saveCard("Leafeon", 80, 3, "Hoja afilada", 60, 3);
         saveCard("Jolteon", 80, 4, "Attacktrueno", 40, 4);
         saveCard("Energia Basica", 1);
-    }
-
-    public PokemonType calculatePokemonType(int option) {
-
-        PokemonType temp = PokemonType.AGUA;
-        switch (option) {
-            case 1:
-                temp = PokemonType.AGUA;
-                break;
-            case 2:
-                temp = PokemonType.FUEGO;
-                break;
-            case 3:
-                temp = PokemonType.PLANTA;
-                break;
-            case 4:
-                temp = PokemonType.ELECTRICO;
-                break;
-            default:
-                temp = PokemonType.AGUA;
-                break;
-        }
-
-        return temp;
-
+        saveAccesory("Dado del Campeon", 6, "Rojo");
     }
 
     /**
@@ -107,7 +120,7 @@ public class Controller {
         PokemonCard newCard = new PokemonCard(name, healthPoints, pokemonType,
                 new PokemonAttack(attackName, attackPower, calculatePokemonType(attackType)));
 
-        return collection.add(newCard);
+        return bigCollection.add(newCard);
     }
 
     public boolean saveCard(String name, int type) {
@@ -116,7 +129,7 @@ public class Controller {
 
         EnergyCard newCard = new EnergyCard(name, pokemonType);
 
-        return collection.add(newCard);
+        return bigCollection.add(newCard);
 
     }
 
@@ -124,8 +137,18 @@ public class Controller {
 
         TrainerCard newCard = new TrainerCard(name, type);
 
-        return collection.add(newCard);
+        return bigCollection.add(newCard);
 
+    }
+
+    public boolean saveAccesory(String name, int sides, String color) {
+
+        return bigCollection.add(new Die(name, sides, color));
+    }
+
+    public boolean saveAccesory(String name, String headsSimbol, String tailsSimbol, int rarity) {
+
+        return bigCollection.add(new Coin(name, headsSimbol, tailsSimbol, calculateRarity(rarity)));
     }
 
     /**
@@ -137,30 +160,17 @@ public class Controller {
     public String getCollectionInfo() {
         String list = "Las cartas registradas son:\n";
 
-        for (int i = 0; i < collection.size(); i++) {
+        for (int i = 0; i < bigCollection.size(); i++) {
 
-            list += (i + 1) + "|" + collection.get(i).toString() + "\n"; // collection[i] es un objeto PokemonCard
+            list += (i + 1) + "|" + bigCollection.get(i).getName()+ "\n"; // collection[i] es un objeto PokemonCard
 
         }
         return list;
     }
 
-    public String getPokemonTypeList() {
+    public boolean verifyElement(int position) {
 
-        String msg = "Los tipos registrados son: \n";
-        PokemonType[] types = PokemonType.values();
-
-        for (int i = 0; i < types.length; i++) {
-            msg += (i + 1) + ". " + types[i] + "\n";
-        }
-
-        return msg + "\n";
-
-    }
-
-    public boolean verifyCard(int position) {
-
-        if (position <= collection.size() && collection.get(position) != null) {
+        if (position <= bigCollection.size() && bigCollection.get(position) != null) {
             return true;
         }
         return false;
@@ -171,7 +181,7 @@ public class Controller {
         PokemonType temp = calculatePokemonType(pokemontype);
         PokemonCard newCard = new PokemonCard(name, healthpoints, temp,
                 new PokemonAttack(attackName, attackPower, calculatePokemonType(attackType)));
-        collection.set(position - 1, newCard);
+        bigCollection.set(position - 1, newCard);
     }
 
     public boolean modifyFieldPokemonCard(int position, int option, String data) {
@@ -207,7 +217,7 @@ public class Controller {
 
     }
 
-    public Priceable deleteCard(int position) {
+    public Collectable deleteCard(int position) {
 
         return bigCollection.remove(position);
 
@@ -218,7 +228,7 @@ public class Controller {
         String msg = "La coleccion de cartas tiene la siguiente composicion\n";
         int pokemonCount = 0, trainerCount = 0, energyCount = 0;
 
-        for (Card card : collection) {
+        for (Collectable card : bigCollection) {
             if (card instanceof PokemonCard) {
                 pokemonCount++;
             }
@@ -244,20 +254,20 @@ public class Controller {
 
         String msg = "La coleccion de cartas tiene la siguiente composicion por tipo " + type + "\n";
 
-        for (Card card : collection) {
+        for (Collectable card : bigCollection) {
 
             // Validacion energia
             if (card instanceof EnergyCard) {
                 /*
-                EnergyCard eC = (EnergyCard) card;
+                 * EnergyCard eC = (EnergyCard) card;
+                 * 
+                 * if (eC.getType() == type) {
+                 * 
+                 * energyCount++;
+                 * }
+                 */
 
-                if (eC.getType() == type) {
-
-                    energyCount++;
-                }
-                */
-
-                if(((EnergyCard) card).getType()==type){
+                if (((EnergyCard) card).getType() == type) {
                     energyCount++;
                 }
             }
@@ -279,23 +289,82 @@ public class Controller {
 
     }
 
-    public String getCardInfo(int position) {
+    public String getElementInfo(int position) {
 
-        if (position > collection.size() || position < 0) {
+        if (position > bigCollection.size() || position < 0) {
             return "Error";
         }
 
-        return collection.get(position).toString();
+        return bigCollection.get(position).toString();
 
     }
 
-    public String getCardPrice(int position) {
+    public String getElementPrice(int position) {
 
-        if (position > collection.size() || position < 0) {
+        if (position > bigCollection.size() || position < 0) {
             return "Error";
         }
 
-        return "El precio es: " + collection.get(position).calculatePrice();
+        return "El precio es: " + bigCollection.get(position).calculatePrice();
+
+    }
+
+    public String getPokemonTypeList() {
+
+        String msg = "Los tipos registrados son: \n";
+        PokemonType[] types = PokemonType.values();
+
+        for (int i = 0; i < types.length; i++) {
+            msg += (i + 1) + ". " + types[i] + "\n";
+        }
+
+        return msg + "\n";
+
+    }
+
+
+    public PokemonType calculatePokemonType(int option) {
+
+        PokemonType temp = PokemonType.AGUA;
+        switch (option) {
+            case 1:
+                temp = PokemonType.AGUA;
+                break;
+            case 2:
+                temp = PokemonType.FUEGO;
+                break;
+            case 3:
+                temp = PokemonType.PLANTA;
+                break;
+            case 4:
+                temp = PokemonType.ELECTRICO;
+                break;
+            default:
+                temp = PokemonType.AGUA;
+                break;
+        }
+
+        return temp;
+
+    }
+
+    public String getRarityList() {
+
+        String msg = "Las rarezas registradas son: \n";
+        Rarity[] rarities = Rarity.values();
+
+        for (int i = 0; i < rarities.length; i++) {
+            msg += (i + 1) + ". " + rarities[i] + "\n";
+        }
+
+        return msg + "\n";
+
+    }
+
+
+    public Rarity calculateRarity(int option) {
+
+        return Rarity.values()[option];
 
     }
 

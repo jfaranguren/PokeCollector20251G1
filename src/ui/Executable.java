@@ -36,11 +36,12 @@ public class Executable {
             System.out.println("5) Consultar estadisticas de la coleccion");
             System.out.println("6) Cartas por tipo de Pokemon");
             System.out.println("7) Consultar Info Carta");
-            System.out.println("0) Salir");
+            System.out.println("8) Registrar un accesorio");
+            System.out.println("0) Guardar los cambios y Salir");
             option = input.nextInt();
             switch (option) {
                 case 1:
-                    System.out.println("REGISTRO DE CARGA");
+                    System.out.println("REGISTRO DE CARTA");
                     System.out.println("Digite una opcion");
                     System.out.println("1) Crear PokemonCard");
                     System.out.println("2) Crear TrainerCard");
@@ -50,19 +51,19 @@ public class Executable {
                         case 1:
                             registerPokemonCard();
                             break;
-
                         case 2:
                             registerTrainerCard();
                             break;
-
                         case 3:
                             registerEnergyCard();
+                            break;
+                        default:
+                            System.out.println("Opcion invalida, regresando al menu principal");
                             break;
                     }
                     break;
                 case 2:
                     System.out.println(controller.getCollectionInfo());
-
                     break;
                 case 3:
                     System.out.println("Digite una opcion");
@@ -85,12 +86,31 @@ public class Executable {
                 case 6:
                     showCollectionByPokemonType();
                     break;
-                    case 7:
+                case 7:
                     showCardInfo();
+                    break;
+                case 8:
+                    System.out.println("REGISTRO DE ACCESORIO");
+                    System.out.println("Digite una opcion");
+                    System.out.println("1) Crear Dado");
+                    System.out.println("2) Crear Moneda");
+                    int registerAccesory = input.nextInt();
+                    switch (registerAccesory) {
+                        case 1:
+                            // registerDie();
+                            System.out.println("Pending");
+                            break;
+                        case 2:
+                            registerCoin();
+                            break;
+                        default:
+                            System.out.println("Opcion invalida, regresando al menu principal");
+                            break;
+                    }
                     break;
 
                 case 0:
-                    System.out.println("Adios");
+                    saveChanges();
                     break;
 
                 default:
@@ -117,16 +137,33 @@ public class Executable {
 
     }
 
-    public void showCardInfo(){
+    public void saveChanges() {
 
-        System.out.println("Digite la posicion de la carta en la coleccion");
-        int pos = input.nextInt()-1;
+        System.out.println("¿Desea guardar los cambios? \n1) Si\n2) No");
+        int option = input.nextInt();
 
-        System.out.println(controller.getCardInfo(pos));
+        if (option == 1) {
+            controller.saveCollectionToFile();
+            System.out.println("Cambios guardados");
+        } else {
+            System.out.println("Los cambios han sido descartados");
+        }
+        System.out.println("Gracias por usar nuestros servicios. Adios!");
 
     }
 
-    public void showCollectionByPokemonType(){
+    public void showCardInfo() {
+
+        System.out.println(controller.getCollectionInfo());
+
+        System.out.println("Digite la posicion de la carta en la coleccion");
+        int pos = input.nextInt() - 1;
+
+        System.out.println(controller.getElementInfo(pos));
+
+    }
+
+    public void showCollectionByPokemonType() {
 
         System.out.println(controller.getPokemonTypeList());
 
@@ -135,10 +172,8 @@ public class Executable {
 
         System.out.println(controller.getCardInfomationByPokemonType(type));
 
-
     }
 
-    
     public void registerTrainerCard() {
 
         input.nextLine();
@@ -213,6 +248,32 @@ public class Executable {
 
     }
 
+    public void registerCoin() {
+
+        input.nextLine();
+
+        System.out.println("Digite el nombre");
+        String name = input.nextLine();
+
+        System.out.println("Digite la descripcion de la cara de la moneda");
+        String heads = input.nextLine();
+
+        System.out.println("Digite la descripcion del sello de la moneda");
+        String tails = input.nextLine();
+
+        System.out.println(controller.getRarityList());
+
+        System.out.println("Digite el tipo de Rareza");
+        int rarity = input.nextInt()-1;
+
+        if (controller.saveAccesory(name, heads, tails, rarity)) {
+            System.out.println("Moneda registrada exitosamente");
+        } else {
+            System.out.println("Coleccion llena");
+        }
+
+    }
+
     public void modifyPokemonCard() {
 
         System.out.println(controller.getCollectionInfo());
@@ -220,7 +281,7 @@ public class Executable {
         int position = input.nextInt();
         if ((position > 200) || (position < 0)) {
             System.out.println("Digite una posicion valida");
-        } else if (controller.verifyCard(position - 1)) {
+        } else if (controller.verifyElement(position - 1)) {
 
             input.nextLine();
             System.out.println("Digite el nombre del pokemon: ");
@@ -259,7 +320,7 @@ public class Executable {
         int position = input.nextInt();
         if ((position > controller.getCollectionSize()) || (position < 0)) {
             System.out.println("Digite una posicion valida");
-        } else if (controller.verifyCard(position - 1)) {
+        } else if (controller.verifyElement(position - 1)) {
 
             System.out.println("Digite que quiere modificar \n1. Nombre\n2. Tipo\n3. Puntos de vida");
             int option = input.nextInt();
@@ -300,7 +361,7 @@ public class Executable {
         int position = input.nextInt();
         if ((position > controller.getCollectionSize()) || (position < 0)) {
             System.out.println("Digite una posicion valida");
-        } else if (controller.verifyCard(position - 1)) {
+        } else if (controller.verifyElement(position - 1)) {
 
             if (controller.deleteCard(position - 1) != null) {
                 System.out.println("Carta borrada exitosamente");
