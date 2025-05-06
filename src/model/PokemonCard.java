@@ -85,9 +85,9 @@ public class PokemonCard extends Card {
         
         int sumAttPower = 0;
 
-        for (PokemonAttack pokemonAttack : attacks) {
-            if(pokemonAttack!=null){
-                sumAttPower+=pokemonAttack.getAttackPower();
+        for (PokemonAttack p : attacks) {
+            if(p!=null){
+                sumAttPower+=p.getAttackPower();
             }
         }
 

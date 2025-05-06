@@ -1,15 +1,56 @@
 package model;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList; //Cambios
 
 public class Controller {
 
     private ArrayList<Card> collection; // Cambios
+    private ArrayList<Accesory> accesoryCollection;
+    private ArrayList<Priceable> bigCollection;
+
 
     public Controller() {
         collection = new ArrayList<Card>(); // Cambios
+        accesoryCollection = new ArrayList<Accesory>();
+        bigCollection = new ArrayList<Priceable>();
         testData();
+        System.out.println(writeFile());
     }
+
+    public String writeFile(){
+
+        File dataBase = new File("src\\model\\JuanCarlosPKMN.txt");
+
+        try{
+        dataBase.createNewFile();
+        ObjectOutputStream writer = new ObjectOutputStream(new FileOutputStream(dataBase));
+
+        for (Card c: collection) {
+            writer.writeObject(c);
+        }
+        writer.flush();
+        writer.close();
+
+        }catch(FileNotFoundException e1){
+            //return "Archivo no encontrado";
+            e1.printStackTrace();
+        } catch(IOException e){
+            //return "Error, la ruta del archivo no es valida";
+            e.printStackTrace();
+        }
+
+
+        return null;
+
+
+    }
+
+
 
     public int getCollectionSize() {
         return collection.size();
@@ -140,9 +181,9 @@ public class Controller {
             dataInteger = Integer.parseInt(data);
         }
 
-        if (collection.get(position) instanceof PokemonCard) {
+        if (bigCollection.get(position) instanceof PokemonCard) {
 
-            PokemonCard temp = ((PokemonCard) collection.get(position));
+            PokemonCard temp = ((PokemonCard) bigCollection.get(position));
 
             switch (option) {
                 case 1:
@@ -166,9 +207,9 @@ public class Controller {
 
     }
 
-    public Card deleteCard(int position) {
+    public Priceable deleteCard(int position) {
 
-        return collection.remove(position);
+        return bigCollection.remove(position);
 
     }
 
@@ -201,13 +242,22 @@ public class Controller {
         int pokemonCount = 0, energyCount = 0;
         PokemonType type = calculatePokemonType(typeSelected);
 
-        String msg = "La coleccion de cartas tiene la siguiente composicion por tipo "+type+"\n";
+        String msg = "La coleccion de cartas tiene la siguiente composicion por tipo " + type + "\n";
 
         for (Card card : collection) {
 
             // Validacion energia
             if (card instanceof EnergyCard) {
-                if (((EnergyCard) card).getType() == type) {
+                /*
+                EnergyCard eC = (EnergyCard) card;
+
+                if (eC.getType() == type) {
+
+                    energyCount++;
+                }
+                */
+
+                if(((EnergyCard) card).getType()==type){
                     energyCount++;
                 }
             }
@@ -229,9 +279,9 @@ public class Controller {
 
     }
 
-    public String getCardInfo(int position){
+    public String getCardInfo(int position) {
 
-        if(position>collection.size()||position<0){
+        if (position > collection.size() || position < 0) {
             return "Error";
         }
 
@@ -239,13 +289,13 @@ public class Controller {
 
     }
 
-    public String getCardPrice(int position){
+    public String getCardPrice(int position) {
 
-        if(position>collection.size()||position<0){
+        if (position > collection.size() || position < 0) {
             return "Error";
         }
-        
-        return "El precio es: "+collection.get(position).calculatePrice();
+
+        return "El precio es: " + collection.get(position).calculatePrice();
 
     }
 

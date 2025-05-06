@@ -1,6 +1,8 @@
 package model;
 
-public abstract class Card implements Priceable{
+import java.io.Serializable;
+
+public abstract class Card implements Priceable, Serializable{
     
     private String name;
 
