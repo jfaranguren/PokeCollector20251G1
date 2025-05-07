@@ -1,5 +1,6 @@
 package ui;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import model.Controller;
 
@@ -25,9 +26,9 @@ public class Executable {
 
     public void menu() {
 
-        int option = 0;
+        int option = -1;
         do {
-            System.out.println("\nBienvenido a PokeCollector");
+            System.out.println("Bienvenido a PokeCollector");
             System.out.println("Digite una opcion");
             System.out.println("1) Registrar Carta");
             System.out.println("2) Consultar coleccion");
@@ -38,88 +39,95 @@ public class Executable {
             System.out.println("7) Consultar Info Carta");
             System.out.println("8) Registrar un accesorio");
             System.out.println("0) Guardar los cambios y Salir");
-            option = input.nextInt();
-            switch (option) {
-                case 1:
-                    System.out.println("REGISTRO DE CARTA");
-                    System.out.println("Digite una opcion");
-                    System.out.println("1) Crear PokemonCard");
-                    System.out.println("2) Crear TrainerCard");
-                    System.out.println("3) Crear EnergyCard");
-                    int register = input.nextInt();
-                    switch (register) {
-                        case 1:
-                            registerPokemonCard();
-                            break;
-                        case 2:
-                            registerTrainerCard();
-                            break;
-                        case 3:
-                            registerEnergyCard();
-                            break;
-                        default:
-                            System.out.println("Opcion invalida, regresando al menu principal");
-                            break;
-                    }
-                    break;
-                case 2:
-                    System.out.println(controller.getCollectionInfo());
-                    break;
-                case 3:
-                    System.out.println("Digite una opcion");
-                    System.out.println("1) Para modificar TODOS los atributos de una carta ");
-                    System.out.println("2) Para modificar ALGUNO de los atributos de la carta");
-                    int modify = input.nextInt();
-                    if (modify == 1) {
-                        modifyPokemonCard();
-                    } else {
-                        modifyFieldPokemonCard();
-                    }
 
-                    break;
-                case 4:
-                    deleteCard();
-                    break;
-                case 5:
-                    System.out.println(controller.getCardInformationByType());
-                    break;
-                case 6:
-                    showCollectionByPokemonType();
-                    break;
-                case 7:
-                    showCardInfo();
-                    break;
-                case 8:
-                    System.out.println("REGISTRO DE ACCESORIO");
-                    System.out.println("Digite una opcion");
-                    System.out.println("1) Crear Dado");
-                    System.out.println("2) Crear Moneda");
-                    int registerAccesory = input.nextInt();
-                    switch (registerAccesory) {
-                        case 1:
-                            // registerDie();
-                            System.out.println("Pending");
-                            break;
-                        case 2:
-                            registerCoin();
-                            break;
-                        default:
-                            System.out.println("Opcion invalida, regresando al menu principal");
-                            break;
-                    }
-                    break;
+            try {
+                option = input.nextInt();
+                switch (option) {
+                    case 1:
+                        System.out.println("REGISTRO DE CARTA");
+                        System.out.println("Digite una opcion");
+                        System.out.println("1) Crear PokemonCard");
+                        System.out.println("2) Crear TrainerCard");
+                        System.out.println("3) Crear EnergyCard");
+                        int register = input.nextInt();
+                        switch (register) {
+                            case 1:
+                                registerPokemonCard();
+                                break;
+                            case 2:
+                                registerTrainerCard();
+                                break;
+                            case 3:
+                                registerEnergyCard();
+                                break;
+                            default:
+                                System.out.println("Opcion invalida, regresando al menu principal");
+                                break;
+                        }
+                        break;
+                    case 2:
+                        System.out.println(controller.getCollectionInfo());
+                        break;
+                    case 3:
+                        System.out.println("Digite una opcion");
+                        System.out.println("1) Para modificar TODOS los atributos de una carta ");
+                        System.out.println("2) Para modificar ALGUNO de los atributos de la carta");
+                        int modify = input.nextInt();
+                        if (modify == 1) {
+                            modifyPokemonCard();
+                        } else {
+                            modifyFieldPokemonCard();
+                        }
 
-                case 0:
-                    saveChanges();
-                    break;
+                        break;
+                    case 4:
+                        deleteCard();
+                        break;
+                    case 5:
+                        System.out.println(controller.getCardInformationByType());
+                        break;
+                    case 6:
+                        showCollectionByPokemonType();
+                        break;
+                    case 7:
+                        showCardInfo();
+                        break;
+                    case 8:
+                        System.out.println("REGISTRO DE ACCESORIO");
+                        System.out.println("Digite una opcion");
+                        System.out.println("1) Crear Dado");
+                        System.out.println("2) Crear Moneda");
+                        int registerAccesory = input.nextInt();
+                        switch (registerAccesory) {
+                            case 1:
+                                // registerDie();
+                                System.out.println("Pending");
+                                break;
+                            case 2:
+                                registerCoin();
+                                break;
+                            default:
+                                System.out.println("Opcion invalida, regresando al menu principal");
+                                break;
+                        }
+                        break;
 
-                default:
-                    System.out.println("Opcion invalida");
-                    break;
-            }
+                    case 0:
+                        saveChanges();
+                        break;
 
-            if (option != 0) {
-                backToMenu();
+                    default:
+                        System.out.println("Opcion invalida");
+                        break;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada invalida, volviendo al menu principal");
+
+            } finally {
+                if (option != 0) {
+                    backToMenu();
+                }
+
             }
 
         } while (option != 0);
@@ -129,7 +137,7 @@ public class Executable {
     public void backToMenu() {
 
         System.out.println("\nDigite 1 para volver al menu principal");
-        int menu = input.nextInt();
+        String menu = input.nextLine();
 
         // Limpieza de pantalla
         System.out.print("\033[H\033[2J");
@@ -264,7 +272,7 @@ public class Executable {
         System.out.println(controller.getRarityList());
 
         System.out.println("Digite el tipo de Rareza");
-        int rarity = input.nextInt()-1;
+        int rarity = input.nextInt() - 1;
 
         if (controller.saveAccesory(name, heads, tails, rarity)) {
             System.out.println("Moneda registrada exitosamente");
